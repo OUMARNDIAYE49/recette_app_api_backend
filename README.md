@@ -17,13 +17,13 @@ Suivez ces étapes pour configurer le projet sur votre machine locale :
 1. Clonez le repository :
 
 ```bash
-    git clone https://github.com/Mohamed11abdallah/recette_api.git
+    git clone https://github.com/OUMARNDIAYE49/recette_app_api_backend.git
 ```
 
 2. Accédez au dossier du projet :
 
 ```bash
-    cd recette_api
+    cd recette_app_api_backend
 ```
 
 3. Installez les dépendances :
@@ -39,10 +39,11 @@ Suivez ces étapes pour configurer le projet sur votre machine locale :
 - Créez un fichier .env avec la configuration de votre base de données :
 
 ```bash
-  DB_HOST=localhost
-  DB_USER=root
-  DB_PASSWORD=yourpassword
-  DB_NAME=recette_api
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=mots de passe
+DB_NAME=nom_de_la_base_de_donnée
+port=port_spécifier
 
 ```
 
@@ -65,17 +66,19 @@ Exécutez la commande suivante pour démarrer l'application, :
 - **Reponse** :
   ```bash
   [
-    {
-      "id": 1,
-      "titre": "Spaguettue",
-      "ingredient": "Spagurttue viande Oignons pouvre_noir",
-      "type": "plat"
+   {
+        "id": 38,
+        "titre": "Riz au poison",
+        "ingredients": "Poison, riz huil",
+        "type": "plat",
+        "categorie_id": 14
     },
     {
-      "id": 2,
-      "titre": "Couscous",
-      "ingredient": "Viande OIgnons sel couscous",
-      "type": "plat"
+        "id": 65,
+        "titre": "Couscous",
+        "ingredients": "Couscous marocain, huil",
+        "type": "plat",
+        "categorie_id": 14
     }
   ]
   ```
@@ -85,16 +88,17 @@ Exécutez la commande suivante pour démarrer l'application, :
 - **URL** : `/recipes/:id`
 - **Méthode HTTP** : `GET`
 - **Description** : Récupère une recette spécifique à partir de son ID.
-- **Exemple URL** : http://localhost:4000/api/recipe/1
+- **Exemple URL** : http://localhost:4000/api/recipe/65
 - **Reponse** :
 
   ```bash
-  {
-    "id": 1,
-    "titre": "Spaguettue",
-    "ingredient": "Spagurttue viande Oignons pouvre_noir",
-    "type": "plat"
-  }
+   {
+        "id": 65,
+        "titre": "Couscous",
+        "ingredients": "Couscous marocain, huil",
+        "type": "plat",
+        "categorie_id": 14
+    }
   ```
 
 ### 3. Créer une nouvelle recette
@@ -106,16 +110,12 @@ Exécutez la commande suivante pour démarrer l'application, :
 - **Corps de la requête** (JSON) :
 
 ```bash
-{
-  "titre": "Spaguettue",
-  "ingredient": "Spagurttue viande Oignons pouvre_noir",
-  "type": "plat"
-},
-{
-  "titre": "Couscous",
-  "ingredient": "Viande OIgnons sel couscous",
-  "type": "plat"
-}
+ {
+        "titre": "Couscous viande",
+        "ingredients": "Couscous marocain, huil",
+        "type": "plat",
+        "categorie_id": 14
+    }
 ```
 
 - **Reponse** :
@@ -131,17 +131,18 @@ Exécutez la commande suivante pour démarrer l'application, :
 - **URL** : `/recipes/:id`
 - **Méthode HTTP** : `PUT`
 - **Description** : Met à jour les informations d'une recette existante en fonction de son ID.
-- **Exemple URL** : http://localhost:4000/api/recipe/2
+- **Exemple URL** : http://localhost:4000/api/recipe/38
 
 - **Corps de la requête** (JSON) :
 
-  ```bash
-  {
-    "titre": "Couscous",
-    "ingredient": "Viande Oignons sel couscous",
-    "type": "plat"
-  }
-  ```
+```bash
+ {
+        "titre": "Riz au viande",
+        "ingredients": "Viande, riz huil",
+        "type": "plat",
+        "categorie_id": 14
+    },
+```
 
 - **Reponse** :
 
@@ -156,7 +157,103 @@ Exécutez la commande suivante pour démarrer l'application, :
 - **URL** : `/recipes/:id`
 - **Méthode HTTP** : `DELETE`
 - **Description** : Supprime une recette existante en fonction de son ID.
-- **Exemple URL** : http://localhost:4000/api/recipe/34
+- **Exemple URL** : http://localhost:4000/api/recipe/65
+- **Reponse** :
+
+```bash
+{
+    "message": "Suppression réussie avec succès"
+}
+```
+
+## Routes disponibles pour les catégories
+
+### 1. Récupérer toutes les catégories
+
+- **URL** : `/categories`
+- **Méthode HTTP** : `GET`
+- **Description** : Récupère toutes les catégories de la base de données.
+- **Exemple** : http://localhost:4000/api/categories/
+- **Reponse** :
+```bash
+ [
+   {
+      "id": 14,
+      "nom": "Plat principal"
+    },
+    {
+      "id": 15,
+      "nom": "Dessert"
+    }
+]
+```
+
+### 2. Récupérer une categorie par son ID
+
+- **URL** : `/categories/:id`
+- **Méthode HTTP** : `GET`
+- **Description** : Récupère une catégorie spécifique à partir de son ID
+- **Exemple URL** : http://localhost:4000/api/categories/14
+- **Reponse** :
+
+  ```bash
+   {
+        "id": 14,
+        "nom": "Plat principal"
+    }
+  ```
+
+### 3. Créer une nouvelle categorie
+
+- **URL** : `/categories`
+- **Méthode HTTP** : `POST`
+- **Description** : Crée une nouvelle categorie.
+- **Exemple URL** : http://localhost:4000/api/categories
+- **Corps de la requête** (JSON) :
+
+```bash
+ {
+       "nom": "Boisson"
+    }
+```
+
+- **Reponse** :
+
+```bash
+{
+    "message": "Categorie ajoutée avec succès"
+}
+```
+
+### 4. Mettre à jour une categorie
+
+- **URL** : `/categories/:id`
+- **Méthode HTTP** : `PUT`
+- **Description** : Met à jour les informations d'une categorie existante en fonction de son ID.
+- **Exemple URL** : http://localhost:4000/api/categories/14
+
+- **Corps de la requête** (JSON) :
+
+  ```bash
+ {
+        "nom": "Entrée"
+    },
+  ```
+
+- **Reponse** :
+
+```bash
+{
+    "message": "Mise à jour réussie avec succès"
+}
+```
+
+### 5. Supprimer une categorie
+
+- **URL** : `/categories/:id`
+- **Méthode HTTP** : `DELETE`
+- **Description** : Supprime une categorie existante en fonction de son ID.
+- **Exemple URL** : http://localhost:4000/api/categories/14
 - **Reponse** :
 
 ```bash
@@ -173,18 +270,19 @@ Nous avons préparé une collection de requêtes Postman pour faciliter les test
 
 #### Étapes pour importer la collection :
 
-1. Télécharger la collection Postman exportée en cliquant [ici](./chemin/vers/votre/collection.json).
+1. Télécharger les collections Postman exportée  sont a la racine du projet.
 2. Ouvrez Postman.
 3. Cliquez sur **Importer** en haut à gauche.
 4. Sélectionnez le fichier `.json` exporté et cliquez sur **Importer**.
 5. Vous verrez la collection `recette_api` dans votre interface Postman.
+7. Vous verrez la collection `categorie_api` dans votre interface Postman.
 
 ## Comment exécuter les tests unitaires
 
 Assurez-vous que votre base de données est configurée correctement avant d'exécuter les tests. Jasmine affichera un rapport des tests exécutés, ainsi que les résultats (succès ou échecs).
 
 ```bash
-npx jasmine
+npm test
 ```
 
 - Cette commande lancera tous les tests définis dans les fichiers de test, notamment dans le répertoire `spec`.
@@ -196,70 +294,24 @@ npx jasmine
 Jasmine started
 CONNECTED
 
-  Recette Model
-    √ should create a recette
-    √ should get all recettes
-    √ should get a recette by ID
-    √ should update a recette
-    √ should delete a recette
+  RecetteModel
+    √ devrait récupérer une recette par ID
+    √ devrait récupérer toutes les recettes
+    √ devrait mettre à jour une recette existante
+    √ devrait créer une nouvelle recette
+    √ devrait supprimer une recette par ID
 
-Executed 5 of 5 specs SUCCESS in 0.13 sec.
+  CategorieModel
+    √ devrait récupérer une catégorie par ID
+    √ devrait supprimer une catégorie par ID
+    √ devrait créer une nouvelle catégorie
+    √ devrait mettre à jour une catégorie existante
+    √ devrait récupérer toutes les catégories
+
+Executed 10 of 10 specs SUCCESS in 0.2 sec.
+Randomized with seed 76136.
 ```
-
-## Étapes pour construire et lancer le conteneur Docker
-
-- Assurez-vous d'avoir Docker et Docker Compose installés sur votre machine, ensuite :
-
-1. Créer le fichier Dockerfile : Si ce n'est pas déjà fait, créez un fichier Dockerfile à la racine de votre projet avec les instructions nécessaires pour construire l'image de votre application.
-
-2. Créer le fichier docker-compose.yml : Si vous utilisez Docker Compose, assurez-vous d'avoir un fichier docker-compose.yml configuré.
-
-3. Construire l'image Docker : À la racine de votre projet, exécutez la commande suivante pour construire l'image Docker :
-
-- Pour construire l'image Docker de l'API, utilisez la commande suivante :
-
-```bash
-docker build -t recette_api .
-```
-
-- Tester l'Image Localement : Après avoir construit l'image, vous pouvez la tester localement en exécutant la commande suivante :
-
-```bash
-docker run -p 4000:4000 recette_api
-```
-
-- Lancer le Conteneur avec Docker Compose : Pour lancer le conteneur en utilisant docker-compose, exécutez cette commande :
-
-```bash
-docker-compose up --build
-```
-
-- Déploye l’image sur DockerHub : Connexion à DockerHub
-  si vous n'etes pas connecté, pour vous connecter à votre compte DockerHub, utilisez la commande suivante :
-
-```bash
-docker login
-```
-
-- Taguer et Pousser l'Image vers DockerHub : Taguez l'image Docker pour la préparer à être poussée sur DockerHub :
-
-```bash
-docker tag recette_api your-dockerhub-username/recette_api:latest
-```
-
-- Enfin, poussez l'image taguée vers DockerHub :
-
-```bash
-docker push your-dockerhub-username/recette_api:latest
-```
-
-Remplacer 'your-dockerhub-username' par votre nom d'utilisateur docker
-
-## Lien de l'Image sur DockerHub.
-
-https://hub.docker.com/r/mohamedabdallahi/recette_api/tags
 
 ## Auteur
 
-[Mohamed Abdallahi M'khaitir](https://github.com/Mohamed11abdallah)
 [Oumar Ndiaye](https://github.com/OUMARNDIAYE49/OumarNDIAYE)
