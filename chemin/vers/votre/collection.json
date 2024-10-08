@@ -1,0 +1,115 @@
+{
+  "info": {
+    "_postman_id": "0642c1c3-8fe6-451e-af93-ede490d5c80f",
+    "name": "recette_api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38116702"
+  },
+  "item": [
+    {
+      "name": "GET Recipe by ID",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"titre\": \"Mafée domoda\",\r\n    \"ingredient\": \"Takioa\",\r\n    \"type\": \"plat\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:4000/api/recipe/33",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "recipe", "33"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST Create Recipe",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"titre\": \"Riz au poisson\",\r\n\"ingredient\": \"Ingrédients de Test\",\r\n\"type\": \"plat\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:4000/api/recipes",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "recipes"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET All Recipes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:4000/api/recipes",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "recipes"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT Update Recipe",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "    {\r\n        \"titre\": \"Mafé\",\r\n        \"ingredient\": \"Arachide, Riz\",\r\n        \"type\": \"plat\"\r\n    }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:4000/api/recipe/33",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "recipe", "33"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE Recipe",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:4000/api/recipe/35",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "recipe", "35"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

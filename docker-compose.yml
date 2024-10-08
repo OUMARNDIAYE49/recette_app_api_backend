@@ -1,0 +1,31 @@
+# version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: recette_api_app
+    image: recette_api
+    env_file: .env
+    ports:
+      - '4000:4000'
+    volumes:
+      - .:/usr/src/server
+    depends_on:
+      - db
+
+  db:
+    image: mysql
+    container_name: recette_api
+    env_file: .env
+
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+
+volumes:
+  db-data:
