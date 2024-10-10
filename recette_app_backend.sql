@@ -27,7 +27,7 @@ CREATE TABLE `categories` (
   `nom` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nom` (`nom`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,7 +36,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (14,'Boisson'),(13,'Dessert'),(11,'Entrée'),(15,'Salade');
+INSERT INTO `categories` VALUES (23,'Boisson gazeux'),(2,'Dessert'),(3,'Entrée'),(1,'Plat mauritanie'),(4,'Salade');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,8 +56,8 @@ CREATE TABLE `recettes` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `titre` (`titre`),
   KEY `categorie_id` (`categorie_id`),
-  CONSTRAINT `recettes_ibfk_1` FOREIGN KEY (`categorie_id`) REFERENCES `categories` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `recettes_ibfk_1` FOREIGN KEY (`categorie_id`) REFERENCES `categories` (`id`) ON DELETE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `recettes` (
 
 LOCK TABLES `recettes` WRITE;
 /*!40000 ALTER TABLE `recettes` DISABLE KEYS */;
-INSERT INTO `recettes` VALUES (38,'Riz au poison','Poison, riz huil','plat',14),(65,'Couscous','Couscous marocain, huil','plat',14);
+INSERT INTO `recettes` VALUES (1,'Couscous','Couscous marocain, huil','plat',2),(4,'Couscousa','Couscous marocain, huil','plat',2),(5,'Yassa poulet','Poulet , Riz, huil','Plat',1);
 /*!40000 ALTER TABLE `recettes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -79,4 +79,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-08 16:51:45
+-- Dump completed on 2024-10-10 16:10:19

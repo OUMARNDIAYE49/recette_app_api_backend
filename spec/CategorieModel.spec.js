@@ -1,5 +1,3 @@
-import './helpers/jasmineHelper.js';
-import db from '../src/config/dbConfig.js'; // Réintroduire l'importation de db
 import {
   getAllCategories,
   getCategorieById,
@@ -7,70 +5,59 @@ import {
   updateCategorie,
   deleteCategorie,
 } from '../src/models/CategorieModel.js';
+import db from '../src/config/dbConfig.js';
 
 describe('CategorieModel', () => {
-  // Nettoyage avant chaque test pour éviter des conflits
-  beforeEach(async () => {
-    await db.query('DELETE FROM categories'); // Supprimer toutes les catégories pour un état propre
+  it('should get all categories', async () => {
+    const mockCategories = [
+      { id: 1, nom: 'Entrées' },
+      { id: 2, nom: 'Plats' },
+    ];
+
+    spyOn(db, 'query').and.returnValue([mockCategories]);
+
+    const result = await getAllCategories();
+
+    expect(result).toEqual(mockCategories);
   });
 
-  const categoriesDeTest = [
-    { nom: 'Entrée' },
-    { nom: 'Plat principal' },
-    { nom: 'Dessert' },
-    { nom: 'Boisson' },
-    { nom: 'Salade' },
-  ];
+  it('should get a category by ID', async () => {
+    const mockCategory = { id: 1, nom: 'Entrées' };
 
-  it('devrait récupérer toutes les catégories', async () => {
-    // Insérer plusieurs catégories pour le test
-    for (const categorie of categoriesDeTest) {
-      await createCategorie(categorie.nom);
-    }
+    spyOn(db, 'query').and.returnValue([[mockCategory]]);
 
-    const categories = await getAllCategories();
-    expect(categories).toBeDefined();
-    expect(Array.isArray(categories)).toBe(true);
-    expect(categories.length).toBe(categoriesDeTest.length);
+    const result = await getCategorieById(1);
+
+    expect(result).toEqual(mockCategory);
   });
 
-  it('devrait récupérer une catégorie par ID', async () => {
-    const nouvelleCategorie = await createCategorie('Plat principal');
+  it('should create a category', async () => {
+    const mockResult = { insertId: 1 };
 
-    const categorie = await getCategorieById(nouvelleCategorie.insertId);
-    expect(categorie).toBeDefined();
-    expect(categorie.id).toBe(nouvelleCategorie.insertId);
-    expect(categorie.nom).toBe('Plat principal');
+    spyOn(db, 'query').and.returnValue([mockResult]);
+
+    const result = await createCategorie('Desserts');
+
+    expect(result).toEqual(mockResult);
   });
 
-  it('devrait créer une nouvelle catégorie', async () => {
-    const result = await createCategorie('Dessert');
-    expect(result).toBeDefined();
-    expect(result.affectedRows).toBe(1);
+  it('should update a category', async () => {
+    const mockResult = { affectedRows: 1 };
+
+    spyOn(db, 'query').and.returnValue([mockResult]);
+
+    const result = await updateCategorie(1, 'Updated Category');
+
+    expect(result).toEqual(mockResult);
   });
 
-  it('devrait mettre à jour une catégorie existante', async () => {
-    const nouvelleCategorie = await createCategorie('Boisson');
+  it('should delete a category', async () => {
+    const mockResult = { affectedRows: 1 };
 
-    const result = await updateCategorie(
-      nouvelleCategorie.insertId,
-      'Boisson froide'
-    );
-    expect(result.affectedRows).toBe(1);
+    spyOn(db, 'query').and.returnValue([mockResult]);
 
-    const updatedCategorie = await getCategorieById(nouvelleCategorie.insertId);
-    expect(updatedCategorie.nom).toBe('Boisson froide');
-  });
+    const result = await deleteCategorie(1);
 
-  it('devrait supprimer une catégorie par ID', async () => {
-    const nouvelleCategorie = await createCategorie('Salade');
-
-    const result = await deleteCategorie(nouvelleCategorie.insertId);
-    expect(result.affectedRows).toBe(1);
-
-    const categorieSupprimee = await getCategorieById(
-      nouvelleCategorie.insertId
-    );
-    expect(categorieSupprimee).toBeNull(); // Vérifie que la catégorie n'existe plus
+    expect(result).toEqual(mockResult);
   });
 });

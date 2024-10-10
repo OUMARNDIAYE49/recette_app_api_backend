@@ -90,10 +90,17 @@ export const createCategorieController = async (req, res) => {
 export const updateCategorieController = async (req, res) => {
   const { id } = req.params;
   const { nom } = req.body;
+  
   try {
+    // Vérifier si l'ID existe
+    const existingCategory = await getCategorieById(id);
+    if (!existingCategory) {
+      return res.status(404).json({ message: `Catégorie avec l'ID ${id} non trouvée.` });
+    }
+
     // Vérifier l'unicité du nom
-    const existingCategory = await getCategorieByName(nom);
-    if (existingCategory && existingCategory.id !== parseInt(id)) {
+    const categoryWithSameName = await getCategorieByName(nom);
+    if (categoryWithSameName && categoryWithSameName.id !== parseInt(id)) {
       return res
         .status(400)
         .json({ message: 'Le nom est déjà utilisé par une autre catégorie.' });
@@ -111,7 +118,14 @@ export const updateCategorieController = async (req, res) => {
 
 export const deleteCategorieController = async (req, res) => {
   const { id } = req.params;
+  
   try {
+    // Vérifier si l'ID existe
+    const existingCategory = await getCategorieById(id);
+    if (!existingCategory) {
+      return res.status(404).json({ message: `Catégorie avec l'ID ${id} non trouvée.` });
+    }
+
     await deleteCategorie(id);
     res.status(200).json({ message: 'Catégorie supprimée avec succès' });
   } catch (error) {

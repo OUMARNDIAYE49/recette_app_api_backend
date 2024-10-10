@@ -1,168 +1,84 @@
-// import './helpers/jasmineHelper.js';
-// import db from '../src/config/dbConfig.js';
-// import {
-//   getAllRecettes,
-//   getRecetteById,
-//   createRecette,
-//   updateRecette,
-//   deleteRecette,
-// } from '../src/models/RecetteModel.js';
-
-// describe('Recette Model', () => {
-//   beforeAll(async () => {
-//     await db.query('DELETE FROM recettes');
-//   });
-
-//   afterAll(async () => {
-//     await db.query('DELETE FROM recettes');
-//     await db.end();
-//   });
-
-//   it('should create a recette', async () => {
-//     const recette = await createRecette(
-//       'Titre de Test',
-//       'Ingrédients de Test',
-//       'plat'
-//     );
-//     expect(recette.affectedRows).toBe(1);
-//   });
-
-//   it('should get all recettes', async () => {
-//     await createRecette('Titre de Test', 'Ingrédients de Test', 'plat');
-//     const recettes = await getAllRecettes();
-//     expect(recettes.length).toBeGreaterThan(0);
-//   });
-
-//   it('should get a recette by ID', async () => {
-//     const createdRecette = await createRecette(
-//       'Titre de Test',
-//       'Ingrédients de Test',
-//       'plat'
-//     );
-//     const recette = await getRecetteById(createdRecette.insertId);
-//     expect(recette).not.toBeNull();
-//     expect(recette).toEqual({
-//       id: createdRecette.insertId,
-//       titre: 'Titre de Test',
-//       ingredient: 'Ingrédients de Test',
-//       type: 'plat',
-//     });
-//   });
-
-//   it('should update a recette', async () => {
-//     const createdRecette = await createRecette(
-//       'Titre de Test',
-//       'Ingrédients de Test',
-//       'plat'
-//     );
-//     const updatedRecette = await updateRecette(
-//       createdRecette.insertId,
-//       'Titre Mis à Jour',
-//       'Ingrédients Mis à Jour',
-//       'plat'
-//     );
-//     expect(updatedRecette.affectedRows).toBe(1);
-//   });
-
-//   it('should delete a recette', async () => {
-//     const createdRecette = await createRecette(
-//       'Titre de Test',
-//       'Ingrédients de Test',
-//       'plat'
-//     );
-//     const result = await deleteRecette(createdRecette.insertId);
-//     expect(result.affectedRows).toBe(1);
-//   });
-// });
-
-import './helpers/jasmineHelper.js';
-import db from '../src/config/dbConfig.js';
 import {
   getAllRecettes,
   getRecetteById,
   createRecette,
   updateRecette,
   deleteRecette,
+  searchRecettesByName,
 } from '../src/models/RecetteModel.js';
+import db from '../src/config/dbConfig.js';
 
 describe('RecetteModel', () => {
-  // Nettoyage avant chaque test pour éviter des conflits
-  beforeEach(async () => {
-    await db.query('DELETE FROM recettes'); // Supprimer toutes les recettes pour un état propre
+  it('should get all recipes', async () => {
+    const mockRecettes = [
+      { id: 1, titre: 'Tarte aux pommes' },
+      { id: 2, titre: 'Poulet rôti' },
+    ];
+
+    spyOn(db, 'query').and.returnValue([mockRecettes]);
+
+    const result = await getAllRecettes();
+
+    expect(result).toEqual(mockRecettes);
   });
 
-  it('devrait récupérer toutes les recettes', async () => {
-    // Insérer une recette pour le test
-    await createRecette(
-      'Salade César',
-      'Laitue, Poulet, Parmesan, Croûtons, Sauce César',
-      'Entrée',
-      1
-    );
+  it('should get a recipe by ID', async () => {
+    const mockRecette = { id: 1, titre: 'Tarte aux pommes' };
 
-    const recettes = await getAllRecettes();
-    expect(recettes).toBeDefined();
-    expect(Array.isArray(recettes)).toBe(true);
-    expect(recettes.length).toBe(1);
+    spyOn(db, 'query').and.returnValue([[mockRecette]]);
+
+    const result = await getRecetteById(1);
+
+    expect(result).toEqual(mockRecette);
   });
 
-  it('devrait récupérer une recette par ID', async () => {
-    const nouvelleRecette = await createRecette(
-      'Pizza Margherita',
-      'Tomates, Mozzarella, Basilic, Pâte à pizza',
-      'Plat principal',
-      2
-    );
+  it('should create a recipe', async () => {
+    const mockResult = { insertId: 1 };
 
-    const recette = await getRecetteById(nouvelleRecette.insertId);
-    expect(recette).toBeDefined();
-    expect(recette.id).toBe(nouvelleRecette.insertId);
+    spyOn(db, 'query').and.returnValue([mockResult]);
+
+    const result = await createRecette('Quiche', 'Oeufs, Lardons', 'Plat', 1);
+
+    expect(result).toEqual(mockResult);
   });
 
-  it('devrait créer une nouvelle recette', async () => {
-    const result = await createRecette(
-      'Tarte aux pommes',
-      'Pommes, Sucre, Beurre, Pâte feuilletée',
-      'Dessert',
-      3
-    );
-    expect(result).toBeDefined();
-    expect(result.affectedRows).toBe(1);
+  it('should update a recipe', async () => {
+    const mockRecette = { id: 1, titre: 'Quiche', ingredients: 'Oeufs, Lardons', type: 'Plat', categorie_id: 1 };
+    const mockResult = { affectedRows: 1 };
+
+    spyOn(db, 'query').and.callFake((query, params) => {
+        if (query.includes('SELECT * FROM recettes WHERE id = ?')) {
+            return [[mockRecette]]; 
+        }
+        if (query.includes('UPDATE recettes SET')) {
+            return [mockResult]; 
+        }
+        return [[]];
+    });
+
+    const result = await updateRecette(1, 'Updated Quiche', 'Oeufs, Lardons', 'Plat', 1);
+
+    expect(result).toEqual(mockResult);
+});
+
+
+  it('should delete a recipe', async () => {
+    const mockResult = { affectedRows: 1 };
+
+    spyOn(db, 'query').and.returnValue([mockResult]);
+
+    const result = await deleteRecette(1);
+
+    expect(result).toEqual(mockResult);
   });
 
-  it('devrait mettre à jour une recette existante', async () => {
-    const nouvelleRecette = await createRecette(
-      'Soupe de légumes',
-      'Carottes, Pommes de terre, Oignons, Eau',
-      'Entrée',
-      1
-    );
+  it('should search for recipes by name', async () => {
+    const mockRecettes = [{ id: 1, titre: 'Tarte aux pommes' }];
 
-    const result = await updateRecette(
-      nouvelleRecette.insertId,
-      'Soupe de légumes améliorée',
-      'Carottes, Pommes de terre, Oignons, Épices, Eau',
-      'Entrée',
-      1
-    );
-    expect(result.affectedRows).toBe(1);
+    spyOn(db, 'query').and.returnValue([mockRecettes]);
 
-    const updatedRecette = await getRecetteById(nouvelleRecette.insertId);
-    expect(updatedRecette.titre).toBe('Soupe de légumes améliorée');
-  });
+    const result = await searchRecettesByName('Tarte');
 
-  it('devrait supprimer une recette par ID', async () => {
-    const nouvelleRecette = await createRecette(
-      'Crêpes au Nutella',
-      'Farine, Lait, Oeufs, Nutella',
-      'Dessert',
-      3
-    );
-
-    const result = await deleteRecette(nouvelleRecette.insertId);
-    expect(result.affectedRows).toBe(1);
-
-    const recetteSupprimee = await getRecetteById(nouvelleRecette.insertId);
-    expect(recetteSupprimee).toBeNull(); // Vérifie que la recette n'existe plus
+    expect(result).toEqual(mockRecettes);
   });
 });

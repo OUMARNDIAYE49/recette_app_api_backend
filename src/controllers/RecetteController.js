@@ -95,8 +95,8 @@ export const updateRecetteController = async (req, res) => {
     return res.status(200).json({ message: 'Recette mise à jour avec succès' });
   } catch (error) {
     console.error('Erreur lors de la mise à jour de la recette :', error);
-    return res.status(500).json({
-      message: 'Erreur serveur lors de la mise à jour de la recette.',
+    return res.status(200).json({
+      message: ' Aucun recette trouve avec ce ID.',
     });
   }
 };

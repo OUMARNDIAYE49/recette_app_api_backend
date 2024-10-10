@@ -11,7 +11,7 @@ const connPool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 100,
   connectTimeout: 100000,
-  // port: 3308,
+ 
 });
 
 connPool
